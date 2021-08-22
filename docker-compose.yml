@@ -1,0 +1,10 @@
+version: "3.8"
+services:
+  showroom-podcast:
+    build:
+      context: .
+      target: production
+    image: mstmelody/showroom-podcast:latest
+    volumes:
+      - ./output:/workspace/output
+      - ./config.yml:/workspace/config.yml

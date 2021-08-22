@@ -1,0 +1,11 @@
+number_process: 3
+stop_if_file_exists: false
+list_room_id:
+  - 1
+  - 2
+  - 3
+  - 4
+  - 5
+slack:
+  bot_token: xoxb-123456789012-345678901234-567890abcdefghijklmnopqr
+  channel: ABCDEFGHI

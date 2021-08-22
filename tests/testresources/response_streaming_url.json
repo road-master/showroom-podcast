@@ -1,0 +1,36 @@
+{
+    "streaming_url_list": [
+        {
+            "is_default": true,
+            "url": "https://hls-origin246.showroom-cdn.com/liveedge/8c8aa496884af085d8f1bf853f03cfc71e7e1f83bbf3f44497e64063caffe28d_source/chunklist.m3u8",
+            "type": "hls",
+            "id": 2,
+            "label": "オリジナル画質",
+            "quality": 1500
+        },
+        {
+            "is_default": true,
+            "url": "https://hls-ull.showroom-cdn.com/8c8aa496884af085d8f1bf853f03cfc71e7e1f83bbf3f44497e64063caffe28d/source/chunklist.m3u8",
+            "type": "lhls",
+            "id": 1,
+            "label": "オリジナル画質（超低遅延）",
+            "quality": 1000
+        },
+        {
+            "is_default": false,
+            "url": "https://hls-origin246.showroom-cdn.com/liveedge/8c8aa496884af085d8f1bf853f03cfc71e7e1f83bbf3f44497e64063caffe28d_low/chunklist.m3u8",
+            "type": "hls",
+            "id": 4,
+            "label": "低画質",
+            "quality": 150
+        },
+        {
+            "is_default": false,
+            "url": "https://hls-ull.showroom-cdn.com/8c8aa496884af085d8f1bf853f03cfc71e7e1f83bbf3f44497e64063caffe28d/low/chunklist.m3u8",
+            "type": "lhls",
+            "id": 3,
+            "label": "低画質（超低遅延）",
+            "quality": 100
+        }
+    ]
+}
