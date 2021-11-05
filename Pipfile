@@ -36,6 +36,8 @@ asynccpu = "*"
 asyncffmpeg = "*"
 # To create CLI
 click = ">=7.0"
+# To request to SHOWROOM API
+requests = "*"
 slack-sdk = "*"
 # To use YAML config file for list of programs to archive
 yamldataclassconfig = "*"
