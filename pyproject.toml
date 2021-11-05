@@ -36,6 +36,7 @@ log_cli_level = "DEBUG"
 
 [[tool.mypy.overrides]]
 module = [
-    "ffmpeg"
+    "ffmpeg",
+    "urllib3.*"
 ]
 ignore_missing_imports = true
