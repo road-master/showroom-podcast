@@ -36,6 +36,18 @@ log_cli_level = "DEBUG"
 
 [[tool.mypy.overrides]]
 module = [
-    "ffmpeg"
+    "ffmpeg",
+    "urllib3.*"
 ]
 ignore_missing_imports = true
+
+[tool.tox]
+# see: https://pipenv-fork.readthedocs.io/en/latest/advanced.html#tox-automation-project
+# Now we are avoiding to use tox-pipenv since we want to define only Pipenv as deps in tox.
+legacy_tox_ini = """
+[testenv]
+deps = pipenv
+commands=
+    pipenv install --skip-lock --dev
+    pytest tests
+"""

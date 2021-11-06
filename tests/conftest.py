@@ -169,15 +169,17 @@ class MockStreamingUrl:
 
 @pytest.fixture
 def mock_requrst_room_1_streaming_url(resource_path_root):
-    response_text = (resource_path_root / "response_streaming_url.json").read_text()
+    # Specifies encoding to prevent following error in Windows:
+    # UnicodeDecodeError: 'charmap' codec can't decode byte 0x81 in position 663: character maps to <undefined>
+    response_text = (resource_path_root / "response_streaming_url.json").read_text(encoding="utf-8")
     yield from MockStreamingUrl.mock_requrst_streaming_url(1, response_text)
 
 
 @pytest.fixture
 def existing_file_2021_08_07_21_00_00():
     path_to_file_example = create_path_to_file_2021_08_07_21_00_00()
-    # Reason: Requires not only release but remove. pylint: disable=consider-using-with
-    yield open(path_to_file_example, "x", encoding="utf-8")
+    with open(path_to_file_example, "x", encoding="utf-8") as file:
+        yield file
     os.remove(path_to_file_example)
 
 
