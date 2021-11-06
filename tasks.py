@@ -133,7 +133,7 @@ def test(context):
     Run tests
     """
     pty = platform.system() == "Linux"
-    context.run("python {} test".format(SETUP_PY), pty=pty)
+    context.run("tox -e py", pty=pty)
 
 
 @task(help={"publish": "Publish the result via coveralls", "xml": "Export report as xml format"})

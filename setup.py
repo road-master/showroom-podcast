@@ -45,8 +45,6 @@ setup(
     packages=find_packages(include=["showroompodcast", "showroompodcast.*"]),
     package_data={"showroompodcast": ["py.typed"]},
     python_requires=">=3.9",
-    test_suite="tests",
-    tests_require=["pytest>=3"],
     url="https://github.com/road-master/showroom-podcast",
     version="20210822183000",
     zip_safe=False,
