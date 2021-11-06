@@ -178,8 +178,8 @@ def mock_requrst_room_1_streaming_url(resource_path_root):
 @pytest.fixture
 def existing_file_2021_08_07_21_00_00():
     path_to_file_example = create_path_to_file_2021_08_07_21_00_00()
-    # Reason: Requires not only release but remove. pylint: disable=consider-using-with
-    yield open(path_to_file_example, "x", encoding="utf-8")
+    with open(path_to_file_example, "x", encoding="utf-8") as file:
+        yield file
     os.remove(path_to_file_example)
 
 
