@@ -169,7 +169,9 @@ class MockStreamingUrl:
 
 @pytest.fixture
 def mock_requrst_room_1_streaming_url(resource_path_root):
-    response_text = (resource_path_root / "response_streaming_url.json").read_text()
+    # Specifies encoding to prevent following error in Windows:
+    # UnicodeDecodeError: 'charmap' codec can't decode byte 0x81 in position 663: character maps to <undefined>
+    response_text = (resource_path_root / "response_streaming_url.json").read_text(encoding="utf-8")
     yield from MockStreamingUrl.mock_requrst_streaming_url(1, response_text)
 
 
