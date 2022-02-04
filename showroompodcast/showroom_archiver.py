@@ -60,7 +60,7 @@ class ArchiveAttempter:
         try:
             await self.ffmpeg_coroutine.execute(ShowroomStreamSpecFactory(self.room_id).create)
         except FFmpegProcessError as error:
-            raise_if("404 Not Found" not in str(error), error)
+            raise_if("404 Not Found" not in str(error))
         except (KeyboardInterrupt, asyncio.CancelledError):
             self.logger.debug("SIGINT for PID=%d", os.getpid())
             self.logger.debug("FFmpeg run cancelled.")

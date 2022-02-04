@@ -1,6 +1,8 @@
 """Raise if."""
 
 
-def raise_if(condition, error):
+def raise_if(condition):
     if condition:
-        raise error
+        # Reason: It's caller's responsible to check calling inside an except clause.
+        # pylint: disable=misplaced-bare-raise
+        raise
