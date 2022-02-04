@@ -22,7 +22,7 @@ class ShowroomPoller:
             is_on_live = Polling.poll(room_id)
         except HTTPError as error:
             # Often returns 503, temporary, retry.
-            raise_if(error.response.status_code != 503, error)
+            raise_if(error.response.status_code != 503)
             return
         if is_on_live and lock_archive_task.acquire(blocking=False):
             self.executor.create_process_task(self.showroom_archiver.archive, room_id, lock_archive_task)
