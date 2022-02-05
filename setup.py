@@ -46,6 +46,6 @@ setup(
     package_data={"showroompodcast": ["py.typed"]},
     python_requires=">=3.9",
     url="https://github.com/road-master/showroom-podcast",
-    version="20211106204500",
+    version="20220205125000",
     zip_safe=False,
 )
