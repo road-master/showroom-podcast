@@ -4,7 +4,7 @@ from showroompodcast.config import Config
 
 __author__ = """Master"""
 __email__ = "roadmasternavi@gmail.com"
-__version__ = "20220205125000"
+__version__ = "20241231044500"
 
 __all__: list[str] = []
 

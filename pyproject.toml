@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "showroompodcast"
-version = "20220205125000"
+version = "20241231044500"
 description = "Automatic archiver for SHOWROOM live which is listed by YAML file."
 readme = "README.md"
 requires-python = ">=3.9"
