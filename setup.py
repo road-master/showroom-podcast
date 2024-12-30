@@ -37,7 +37,7 @@ setup(
     entry_points={"console_scripts": ["showroom-podcast=showroompodcast.cli:showroom_podcast"]},
     exclude_package_data={"": ["__pycache__", "*.py[co]", ".pytest_cache"]},
     include_package_data=True,
-    install_requires=["asynccpu", "asyncffmpeg", "click>=7.0", "requests", "slack-sdk", "yamldataclassconfig"],
+    install_requires=["asynccpu", "asyncffmpeg", "click<8.1.0,>=7.0", "requests", "slack-sdk", "yamldataclassconfig"],
     keywords="archive showroom",
     long_description=readme,
     long_description_content_type="text/markdown",

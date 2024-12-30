@@ -80,7 +80,7 @@ class TestSlackClient:
             token=MockSlackWebClient.BOT_TOKEN_FOR_TEST
         )
         mock_slack_web_client_type_error.chat_post_message.assert_any_call(
-            channel=slack_channel, text='TypeError: can only concatenate str (not "int") to str',
+            channel=slack_channel, text='TypeError: can only concatenate str (not "int") to str'
         )
         mock_slack_web_client_type_error.chat_post_message.assert_called_with(
             channel=slack_channel, text=ANY, thread_ts=ANY

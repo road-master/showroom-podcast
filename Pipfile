@@ -15,6 +15,9 @@ flake8 = "*"
 invoke = "*"
 isort = "*"
 mypy = "*"
+# - ImportError: cannot import name 'LegacySpecifier' from 'packaging.specifiers' · Issue #152 · Madoshakalaka/pipenv-setup
+#   https://github.com/Madoshakalaka/pipenv-setup/issues/152)
+packaging = "==21.3"
 # To graduate discussion about detailed code style of Python
 pipenv-setup = "*"
 pylint = "*"
@@ -28,6 +31,9 @@ requests-mock = "*"
 showroompodcast = {editable = true, path = "."}
 tox = "*"
 types-requests = "*"
+# - ImportError: cannot import name 'LegacySpecifier' from 'packaging.specifiers' · Issue #152 · Madoshakalaka/pipenv-setup
+#   https://github.com/Madoshakalaka/pipenv-setup/issues/152
+vistir = "<0.7.0"
 xenon = "*"
 
 [packages]
@@ -36,7 +42,7 @@ asynccpu = "*"
 # To support Ctrl + C to stop FFmpeg archiving
 asyncffmpeg = "*"
 # To create CLI
-click = ">=7.0"
+click = "<8.1.0,>=7.0"
 # To request to SHOWROOM API
 requests = "*"
 slack-sdk = "*"

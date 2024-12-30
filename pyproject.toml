@@ -14,11 +14,8 @@ docstring-min-length = "7"
 [tool.pylint.format]
 max-line-length = "120"
 
-[tool.pylint.messages_control]
-# bad-continuation: see: https://github.com/PyCQA/pylint/pull/3571
-disable = ''',
-    bad-continuation,
-    '''
+[tool.pylint.master]
+py-version = 3.9
 
 [tool.pylint.options]
 # Since this rule against single responsibility principle.
@@ -37,6 +34,7 @@ log_cli_level = "DEBUG"
 [[tool.mypy.overrides]]
 module = [
     "ffmpeg",
+    "ffmpeg.*",
     "urllib3.*"
 ]
 ignore_missing_imports = true

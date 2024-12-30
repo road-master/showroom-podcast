@@ -16,7 +16,11 @@ class ShowroomPodcast:
     """Main class."""
 
     def __init__(
-        self, *, path_to_configuraion: Path = None, time_to_force_termination: int = TIME_TO_FORCE_TARMINATION
+        # Reason: YAML Dataclass Config's issue.
+        self,
+        *,
+        path_to_configuraion: Path = None,  # type: ignore[arg-type,assignment]
+        time_to_force_termination: int = TIME_TO_FORCE_TARMINATION,
     ) -> None:
         logging.basicConfig(level=logging.DEBUG)
         CONFIG.load(path_to_configuraion)

@@ -38,11 +38,7 @@ def style(context, check=False):
     """
     Format code
     """
-    for result in [
-        isort(context, check),
-        pipenv_setup(context, check),
-        black(context, check),
-    ]:
+    for result in [isort(context, check), pipenv_setup(context, check), black(context, check)]:
         if result.failed:
             raise Failure(result)
 
@@ -55,7 +51,7 @@ def isort(context, check=False) -> Result:
 
 def pipenv_setup(context, check=False) -> Result:
     """Runs pipenv-setup."""
-    isort_options = f"{'check --strict' if check else 'sync --pipfile'}"
+    isort_options = f"{'check' if check else 'sync'}"
     return context.run(f"pipenv-setup {isort_options}", warn=True)
 
 

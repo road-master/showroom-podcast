@@ -10,3 +10,7 @@ class Error(Exception):
 
 class MaxRetriesExceededError(Error):
     """Max retries exceeded."""
+
+
+class TemporaryNetworkIssuesError(Error):
+    """Temporary network issues."""

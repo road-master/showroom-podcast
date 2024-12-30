@@ -28,9 +28,9 @@ class ShowroomArchiver:
         """Archives SHOWROOM program."""
         self.logger.debug("Start archive")
         self.logger.debug("room_id: %d", room_id)
-        archie_attempter = ArchiveAttempter(self.ffmpeg_coroutine, room_id)
+        archive_attempter = ArchiveAttempter(self.ffmpeg_coroutine, room_id)
         try:
-            async for _ in async_retry(archie_attempter, self.RETRY):
+            async for _ in async_retry(archive_attempter, self.RETRY):
                 pass
         finally:
             lock.release()
