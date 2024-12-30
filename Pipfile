@@ -54,7 +54,7 @@ pytest-mock = "*"
 radon = "<6.0.0"
 requests-mock = "*"
 ruff = {version = "*", markers="python_version >= '3.7'"}
-semgrep = {version = "*", markers="python_version >= '3.6'"}
+semgrep = {version = "*", markers="python_version >= '3.6' and sys_platform != 'win32'"}
 showroompodcast = {editable = true, path = "."}
 types-invoke = "*"
 types-requests = "*"
