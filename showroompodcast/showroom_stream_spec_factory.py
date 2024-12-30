@@ -1,10 +1,12 @@
 """Stream spec factory."""
+
 from logging import getLogger
 from pathlib import Path
 
+from asyncffmpeg import StreamSpec
+
 # noinspection PyPackageRequirements
 import ffmpeg
-from asyncffmpeg import StreamSpec
 
 from showroompodcast.api.streaming_url import StreamingUrl
 from showroompodcast.showroom_datetime import ShowroomDatetime
@@ -16,7 +18,7 @@ AREA_ID_DEFAULT = "JP13"
 class ShowroomStreamSpecFactory:
     """Stream spec factory."""
 
-    def __init__(self, room_id: int):
+    def __init__(self, room_id: int) -> None:
         self.room_id = room_id
         self.logger = getLogger(__name__)
 
@@ -28,7 +30,8 @@ class ShowroomStreamSpecFactory:
         self.logger.debug("out file name: %s", out_file_name)
         if Path(out_file_name).exists():
             self.logger.error("File already exists. out_file_name = %s", out_file_name)
-            raise FileExistsError(f"File already exists. {out_file_name=}")
+            msg = f"File already exists. {out_file_name=}"
+            raise FileExistsError(msg)
         streaming_url = StreamingUrl.get_url_for_best_quality(self.room_id)
         stream = ffmpeg.input(streaming_url, copytb="1")
         return ffmpeg.output(stream, out_file_name, f="mp4", c="copy")

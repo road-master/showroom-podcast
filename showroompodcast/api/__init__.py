@@ -1,5 +1,7 @@
 """SHOWROOM API."""
+
 from abc import abstractmethod
+from typing import Any
 
 import requests
 from requests.adapters import HTTPAdapter
@@ -15,14 +17,15 @@ class ShowroomApi:
     )
 
     @classmethod
-    def request(cls, params):
-        """
+    def request(cls, params: dict[str, Any]) -> dict[str, Any]:
+        """Requests.
+
         To use connection pooling via session object
         to prevent NewConnectionError
         Failed to establish a new connection: [Errno -3] Temporary failure in name resolution
         # pylint: disable=line-too-long
-        see: https://stackoverflow.com/questions/8356517/permanent-temporary-failure-in-name-resolution-after-running-for-a-number-of-h/8376268#8376268  # noqa: E501
-        """
+        see: https://stackoverflow.com/questions/8356517/permanent-temporary-failure-in-name-resolution-after-running-for-a-number-of-h/8376268#8376268
+        """  # noqa: E501,RUF100
         session = requests.Session()
         # To prevent following error:
         # 1: Max retries exceeded with url: /api/live/polling?room_id=xxxxxx
@@ -34,9 +37,10 @@ class ShowroomApi:
         session.headers.update({"User-Agent": ShowroomApi.USER_AGENT_WINDOWS_CHROME})
         response = session.get(url=cls.url(), params=params, timeout=20.0)
         response.raise_for_status()
-        return response.json()
+        # Reason: Certainly returns dict.
+        return response.json()  # type: ignore[no-any-return]
 
     @staticmethod
     @abstractmethod
-    def url():
-        raise NotImplementedError()  # pragma: no cover
+    def url() -> str:
+        raise NotImplementedError  # pragma: no cover

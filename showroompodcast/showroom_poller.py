@@ -1,4 +1,5 @@
 """SHOWROOM poller."""
+
 from logging import getLogger
 from threading import Lock
 

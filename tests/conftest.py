@@ -1,22 +1,24 @@
-"""Configuration of pytest"""
-import asyncio
-import json
-import os
-from collections.abc import Awaitable, Callable
-from datetime import datetime
-from pathlib import Path
-from typing import List, Union
+"""Configuration of pytest."""
 
-import pytest
-import requests_mock
+import asyncio
+from collections.abc import Awaitable, Callable, Generator
+from datetime import datetime, timezone
+from io import TextIOWrapper
+import json
+from pathlib import Path
+from typing import Any, Union
+from unittest.mock import MagicMock
+
 from asynccpu.process_task_pool_executor import ProcessTaskPoolExecutor
-from asyncffmpeg import FFmpegCoroutine, StreamSpec
 from asyncffmpeg.exceptions import FFmpegProcessError
 from asyncffmpeg.ffmpeg_coroutine_factory import FFmpegCoroutineFactory
+from asyncffmpeg import FFmpegCoroutine, StreamSpec
+import pytest
 from pytest_mock import MockerFixture
-from slack_sdk import WebClient
+import requests_mock
 from slack_sdk.errors import SlackApiError
 from slack_sdk.web.slack_response import SlackResponse
+from slack_sdk import WebClient
 
 import showroompodcast.slack.slack_client
 
@@ -25,14 +27,19 @@ import showroompodcast.slack.slack_client
 class MockFFmpegCoroutine:
     """Mock FFmpeg coroutine."""
 
-    def __init__(self, mocker: MockerFixture, side_effect: Callable[[Awaitable[StreamSpec]], None]) -> None:
+    def __init__(
+        self,
+        mocker: MockerFixture,
+        side_effect: Callable[[Callable[[], Awaitable[StreamSpec]]], Awaitable[StreamSpec]],
+    ) -> None:
         self.execute = mocker.AsyncMock(side_effect=side_effect)
 
 
 class MockSlackWebClient:
     """Mock Slack web client."""
 
-    BOT_TOKEN_FOR_TEST = "slack_bot_token"
+    # Reason: This is not password.
+    BOT_TOKEN_FOR_TEST = "slack_bot_token"  # noqa: S105  # nosec: B105
     SLACK_CHANNEL = "slack_channel"
 
     def __init__(self, mocker: MockerFixture, responses: list[Union[SlackResponse, SlackApiError]]) -> None:
@@ -41,20 +48,26 @@ class MockSlackWebClient:
         self.responses = responses
 
     @classmethod
-    def mock_constructor(cls, mocker: MockerFixture):
+    def mock_constructor(cls, mocker: MockerFixture) -> MagicMock:
         mock_constructor = mocker.MagicMock(return_value=WebClient(token=cls.BOT_TOKEN_FOR_TEST))
         mocker.patch.object(showroompodcast.slack.slack_client, "WebClient", mock_constructor)
-        return mock_constructor
+        # Reason: Certainly returns MagicMock.
+        return mock_constructor  # type: ignore[no-any-return]
 
     @staticmethod
-    def mock_chat_post_message(mocker: MockerFixture, responses: list[Union[SlackResponse, SlackApiError]]):
+    def mock_chat_post_message(
+        mocker: MockerFixture,
+        responses: list[Union[SlackResponse, SlackApiError]],
+    ) -> MagicMock:
+        """Mocks chat_postMessage."""
         mock_chat_post_message = mocker.MagicMock(side_effect=responses)
         mocker.patch.object(WebClient, "chat_postMessage", mock_chat_post_message)
-        return mock_chat_post_message
+        # Reason: Certainly returns MagicMock.
+        return mock_chat_post_message  # type: ignore[no-any-return]
 
 
-def sleep_one_second(_):
-    asyncio.sleep(1)
+async def sleep_one_second(_: Callable[[], Awaitable[StreamSpec]]) -> None:
+    await asyncio.sleep(1)
 
 
 @pytest.fixture
@@ -67,21 +80,21 @@ def mock_ffmpeg_coroutine(mocker: MockerFixture) -> MockFFmpegCoroutine:
 
 
 @pytest.fixture
-def mock_slack_web_client_broken_process_pool(resource_path_root: Path, mocker: MockerFixture):
+def mock_slack_web_client_broken_process_pool(resource_path_root: Path, mocker: MockerFixture) -> MockSlackWebClient:
     response = json.loads(
-        (resource_path_root / "successful_response_chat_post_message_broken_process_pool.json").read_text()
+        (resource_path_root / "successful_response_chat_post_message_broken_process_pool.json").read_text(),
     )
-    yield MockSlackWebClient(mocker, [response])
+    return MockSlackWebClient(mocker, [response])
 
 
 @pytest.fixture
-def mock_slack_web_client_type_error(resource_path_root: Path, mocker: MockerFixture):
+def mock_slack_web_client_type_error(resource_path_root: Path, mocker: MockerFixture) -> MockSlackWebClient:
     response = json.loads((resource_path_root / "successful_response_chat_post_message_type_error.json").read_text())
-    yield MockSlackWebClient(mocker, [response, response])
+    return MockSlackWebClient(mocker, [response, response])
 
 
 @pytest.fixture
-def mock_slack_web_client_raise_slack_api_error(mocker: MockerFixture):
+def mock_slack_web_client_raise_slack_api_error(mocker: MockerFixture) -> MockSlackWebClient:
     """Mocks Slack web client to raise SlackApiError."""
     slack_response = SlackResponse(
         client=None,
@@ -124,8 +137,12 @@ def mock_slack_web_client_raise_slack_api_error(mocker: MockerFixture):
         },
         status_code=200,
     )
-    slack_api_error = SlackApiError("The request to the Slack API failed.", slack_response)
-    yield MockSlackWebClient(mocker, [slack_api_error])
+    # Reason: Slack API's issue.
+    slack_api_error = SlackApiError(  # type: ignore[no-untyped-call]
+        "The request to the Slack API failed.",
+        slack_response,
+    )
+    return MockSlackWebClient(mocker, [slack_api_error])
 
 
 class MockPolling:
@@ -135,7 +152,7 @@ class MockPolling:
     QUERY = "?room_id="
 
     @classmethod
-    def not_on_live(cls, list_room_id: List[int]):
+    def not_on_live(cls, list_room_id: list[int]) -> Generator[None, None, None]:
         with requests_mock.Mocker() as mock_request:
             response_text = '{"live_end":1,"invalid":1}'
             for room_id in list_room_id:
@@ -143,7 +160,7 @@ class MockPolling:
             yield
 
     @classmethod
-    def on_live(cls, list_room_id: List[int]):
+    def on_live(cls, list_room_id: list[int]) -> Generator[None, None, None]:
         with requests_mock.Mocker() as mock_request:
             response_text = '{"is_login":true,"online_user_num":411,"live_watch_incentive":{}}'
             for room_id in list_room_id:
@@ -151,7 +168,7 @@ class MockPolling:
             yield
 
     @classmethod
-    def status_503(cls, list_room_id: List[int]):
+    def status_503(cls, list_room_id: list[int]) -> Generator[None, None, None]:
         status_code = 503
         with requests_mock.Mocker() as mock_request:
             for room_id in list_room_id:
@@ -160,22 +177,22 @@ class MockPolling:
 
 
 @pytest.fixture
-def mock_requrst_room_1_not_on_live():
+def mock_request_room_1_not_on_live() -> Generator[None, None, None]:
     yield from MockPolling.not_on_live([1])
 
 
 @pytest.fixture
-def mock_requrst_room_1_on_live():
+def mock_request_room_1_on_live() -> Generator[None, None, None]:
     yield from MockPolling.on_live([1])
 
 
 @pytest.fixture
-def mock_requrst_room_1_503():
+def mock_request_room_1_503() -> Generator[None, None, None]:
     yield from MockPolling.status_503([1])
 
 
 @pytest.fixture
-def mock_requrst_room_1_to_5_on_live():
+def mock_request_room_1_to_5_on_live() -> Generator[None, None, None]:
     yield from MockPolling.on_live(list(range(1, 6)))
 
 
@@ -185,7 +202,7 @@ class MockStreamingUrl:
     URL = "https://www.showroom-live.com/api/live/streaming_url"
 
     @classmethod
-    def mock_requrst_streaming_url(cls, room_id: int, response_text: str):
+    def mock_request_streaming_url(cls, room_id: int, response_text: str) -> Generator[None, None, None]:
         query = "?room_id="
         with requests_mock.Mocker() as mock_request:
             mock_request.get(cls.URL + query + str(room_id), complete_qs=True, text=response_text)
@@ -193,52 +210,53 @@ class MockStreamingUrl:
 
 
 @pytest.fixture
-def mock_requrst_room_1_streaming_url(resource_path_root: Path):
+def mock_request_room_1_streaming_url(resource_path_root: Path) -> Generator[None, None, None]:
     # Specifies encoding to prevent following error in Windows:
     # UnicodeDecodeError: 'charmap' codec can't decode byte 0x81 in position 663: character maps to <undefined>
     response_text = (resource_path_root / "response_streaming_url.json").read_text(encoding="utf-8")
-    yield from MockStreamingUrl.mock_requrst_streaming_url(1, response_text)
+    yield from MockStreamingUrl.mock_request_streaming_url(1, response_text)
 
 
 @pytest.fixture
-def existing_file_2021_08_07_21_00_00():
+def existing_file_2021_08_07_21_00_00() -> Generator[TextIOWrapper, None, None]:
     path_to_file_example = create_path_to_file_2021_08_07_21_00_00()
-    with open(path_to_file_example, "x", encoding="utf-8") as file:
+    with path_to_file_example.open("x", encoding="utf-8") as file:
         yield file
-    os.remove(path_to_file_example)
+    path_to_file_example.unlink()
 
 
-def create_path_to_file_2021_08_07_21_00_00():
+def create_path_to_file_2021_08_07_21_00_00() -> Path:
     room_id = 1
     now_string = "2021_08_07-21_00_00"
-    return f"./output/{room_id}-{now_string}.mp4"
+    return Path(f"./output/{room_id}-{now_string}.mp4")
 
 
 @pytest.fixture
-def mock_now_2021_08_07_21_00_00(mocker: MockerFixture):
+def mock_now_2021_08_07_21_00_00(mocker: MockerFixture) -> None:
     mock_datetime = mocker.MagicMock(wrap=datetime)
-    mock_datetime.now.return_value = datetime(2021, 8, 7, 21, 0, 0)
+    mock_datetime.now.return_value = datetime(2021, 8, 7, 21, 0, 0, tzinfo=timezone.utc)
     mocker.patch("showroompodcast.showroom_datetime.datetime", mock_datetime)
 
 
 @pytest.fixture
-def mock_ffmpeg_croutine_ffmpeg_empty_future(mocker: MockerFixture):
-    future: asyncio.Future = asyncio.Future()
+def mock_ffmpeg_coroutine_ffmpeg_empty_future(mocker: MockerFixture) -> FFmpegCoroutine:
+    future: asyncio.Future[None] = asyncio.Future()
     future.set_result(None)
-    yield mock_ffmpeg_croutine(mocker, [future])
+    return create_mock_ffmpeg_coroutine(mocker, [future])
 
 
 @pytest.fixture
-def mock_ffmpeg_croutine_ffmpeg_process_error(mocker: MockerFixture) -> FFmpegCoroutine:
+def mock_ffmpeg_coroutine_ffmpeg_process_error(mocker: MockerFixture) -> FFmpegCoroutine:
     ffmpeg_process_error = FFmpegProcessError(
-        "File '/tmp/pytest-of-root/pytest-1/test_excecption0/2021_08_07-22_30_00.mp4' already exists. Exiting.", 1
+        "File '/tmp/pytest-of-root/pytest-1/test_excecption0/2021_08_07-22_30_00.mp4' already exists. Exiting.",
+        1,
     )
-    return mock_ffmpeg_croutine(mocker, [ffmpeg_process_error])
+    return create_mock_ffmpeg_coroutine(mocker, [ffmpeg_process_error])
 
 
-def mock_ffmpeg_croutine(mocker: MockerFixture, result: list) -> FFmpegCoroutine:
+def create_mock_ffmpeg_coroutine(mocker: MockerFixture, side_effect: Any) -> FFmpegCoroutine:
     ffmpeg_coroutine = FFmpegCoroutineFactory.create()
-    mock_execute = mocker.MagicMock(side_effect=result)
+    mock_execute = mocker.MagicMock(side_effect=side_effect)
     # Reason: Creating Mock.
     ffmpeg_coroutine.execute = mock_execute  # type: ignore[method-assign]
     return ffmpeg_coroutine

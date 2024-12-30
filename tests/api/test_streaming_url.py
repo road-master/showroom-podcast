@@ -1,10 +1,14 @@
 """Test for streaming_url.py."""
+
+import pytest
+
 from showroompodcast.api.streaming_url import StreamingUrl
 
 
 class TestStreamingUrl:
     @staticmethod
-    def test(mock_requrst_room_1_streaming_url):
+    @pytest.mark.usefixtures("mock_request_room_1_streaming_url")
+    def test() -> None:
         room_id = 1
         url = StreamingUrl.get_url_for_best_quality(room_id)
         assert url == (
