@@ -1,6 +1,6 @@
 """Configuration."""
+
 from dataclasses import dataclass, field
-from typing import List
 
 from dataclasses_json import DataClassJsonMixin
 from yamldataclassconfig.config import YamlDataClassConfig
@@ -19,9 +19,10 @@ class Config(YamlDataClassConfig):
     """Configuration."""
 
     # Reason: To use auto complete
-    number_process: int = None  # type: ignore
-    stop_if_file_exists: bool = None  # type: ignore
-    list_room_id: List[int] = field(default_factory=list)
-    slack: SlackConfig = field(  # type: ignore
-        default=None, metadata={"dataclasses_json": {"mm_field": SlackConfig}}
+    number_process: int = None  # type:ignore[assignment]
+    stop_if_file_exists: bool = None  # type:ignore[assignment]
+    list_room_id: list[int] = field(default_factory=list)
+    slack: SlackConfig = field(  # type:ignore[assignment]
+        default=None,
+        metadata={"dataclasses_json": {"mm_field": SlackConfig}},
     )
