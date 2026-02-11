@@ -116,7 +116,7 @@ dependencies = [
     "requests",
     "slack-sdk",
     # To use Path for file path operations
-    "trio",
+    "anyio",
     # To use YAML config file for list of programs to archive
     "yamldataclassconfig<2.0.0",
 ]
