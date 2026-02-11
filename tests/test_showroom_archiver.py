@@ -5,14 +5,18 @@ from collections.abc import AsyncGenerator
 from logging import getLogger
 from threading import Lock
 
+import pytest
+from asyncffmpeg import FFmpegCoroutine
 from asyncffmpeg.exceptions import FFmpegProcessError
 from asyncffmpeg.ffmpeg_coroutine_factory import FFmpegCoroutineFactory
-from asyncffmpeg import FFmpegCoroutine
-from ffmpeg.nodes import InputNode, OutputNode, OutputStream
-import pytest
+from ffmpeg.nodes import InputNode
+from ffmpeg.nodes import OutputNode
+from ffmpeg.nodes import OutputStream
 
 from showroompodcast.exceptions import MaxRetriesExceededError
-from showroompodcast.showroom_archiver import ArchiveAttempter, async_retry, ShowroomArchiver
+from showroompodcast.showroom_archiver import ArchiveAttempter
+from showroompodcast.showroom_archiver import ShowroomArchiver
+from showroompodcast.showroom_archiver import async_retry
 from showroompodcast.showroom_datetime import ShowroomDatetime
 from tests.conftest import MockFFmpegCoroutine
 
@@ -24,7 +28,8 @@ class TestShowroomArchiver:
     @pytest.mark.usefixtures("mock_request_room_1_streaming_url")
     # Reason: pytest fixture. pylint: disable=unused-argument
     async def test(self, mock_ffmpeg_coroutine: MockFFmpegCoroutine) -> None:
-        """
+        """Following specifications should be ensured:
+
         - Locked lock should be unlocked.
         - MaxRetriesEceededError should be raised.
         """
@@ -88,6 +93,7 @@ async def test_async_retry() -> None:
     await run_async_retry(shorter_loop_asynchronous_generator())
 
 
+@pytest.mark.asyncio
 async def test_async_retry_max_retry_exceeded() -> None:
     with pytest.raises(MaxRetriesExceededError):
         await run_async_retry(infinity_loop_asynchronous_generator())

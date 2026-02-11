@@ -1,24 +1,30 @@
 """Configuration of pytest."""
 
 import asyncio
-from collections.abc import Awaitable, Callable, Generator
-from datetime import datetime, timezone
-from io import TextIOWrapper
 import json
+from collections.abc import Awaitable
+from collections.abc import Callable
+from collections.abc import Generator
+from datetime import datetime
+from datetime import timezone
+from io import TextIOWrapper
 from pathlib import Path
-from typing import Any, Union
+from typing import Any
+from typing import Union
 from unittest.mock import MagicMock
 
+import pytest
+import pytest_asyncio
+import requests_mock
 from asynccpu.process_task_pool_executor import ProcessTaskPoolExecutor
+from asyncffmpeg import FFmpegCoroutine
+from asyncffmpeg import StreamSpec
 from asyncffmpeg.exceptions import FFmpegProcessError
 from asyncffmpeg.ffmpeg_coroutine_factory import FFmpegCoroutineFactory
-from asyncffmpeg import FFmpegCoroutine, StreamSpec
-import pytest
 from pytest_mock import MockerFixture
-import requests_mock
+from slack_sdk import WebClient
 from slack_sdk.errors import SlackApiError
 from slack_sdk.web.slack_response import SlackResponse
-from slack_sdk import WebClient
 
 import showroompodcast.slack.slack_client
 
@@ -238,8 +244,8 @@ def mock_now_2021_08_07_21_00_00(mocker: MockerFixture) -> None:
     mocker.patch("showroompodcast.showroom_datetime.datetime", mock_datetime)
 
 
-@pytest.fixture
-def mock_ffmpeg_coroutine_ffmpeg_empty_future(mocker: MockerFixture) -> FFmpegCoroutine:
+@pytest_asyncio.fixture
+async def mock_ffmpeg_coroutine_ffmpeg_empty_future(mocker: MockerFixture) -> FFmpegCoroutine:
     future: asyncio.Future[None] = asyncio.Future()
     future.set_result(None)
     return create_mock_ffmpeg_coroutine(mocker, [future])
