@@ -1,21 +1,45 @@
 """SHOWROOM archiver."""
 
 import asyncio
-from collections.abc import AsyncGenerator, AsyncIterator
-from logging import getLogger
 import os
+from collections.abc import AsyncIterator
+from logging import getLogger
 from threading import Lock
+from typing import Generic
 from typing import TypeVar
 
+from asyncffmpeg import FFmpegCoroutineFactory
 from asyncffmpeg.exceptions import FFmpegProcessError
 from asyncffmpeg.ffmpeg_coroutine import FFmpegCoroutine
-from asyncffmpeg import FFmpegCoroutineFactory
+from asyncffmpeg.ffmpegprocess.interface import FFmpegProcess
 
 from showroompodcast.exceptions import MaxRetriesExceededError
 from showroompodcast.raise_if import raise_if
 from showroompodcast.showroom_stream_spec_factory import ShowroomStreamSpecFactory
 
 TIME_TO_FORCE_TERMINATION = 8
+
+
+T = TypeVar("T")
+
+
+class AsyncRetry(Generic[T]):
+    """Asynchronous retry."""
+
+    def __init__(self, asynchronous_generator: AsyncIterator[T], count: int) -> None:
+        self.attempts = 0
+        self.asynchronous_generator = asynchronous_generator
+        self.count = count
+
+    def __aiter__(self) -> "AsyncRetry[T]":
+        return self
+
+    async def __anext__(self) -> T:
+        if self.attempts >= self.count:
+            raise MaxRetriesExceededError
+        value = await self.asynchronous_generator.__anext__()
+        self.attempts += 1
+        return value
 
 
 class ShowroomArchiver:
@@ -33,28 +57,16 @@ class ShowroomArchiver:
         self.logger.debug("room_id: %d", room_id)
         archive_attempter = ArchiveAttempter(self.ffmpeg_coroutine, room_id)
         try:
-            async for _ in async_retry(archive_attempter, self.RETRY):
+            async for _ in AsyncRetry(archive_attempter, self.RETRY):
                 pass
         finally:
             lock.release()
 
 
-T = TypeVar("T")
-
-
-async def async_retry(asynchronous_generator: AsyncIterator[T], count: int) -> AsyncGenerator[T, None]:
-    for _ in range(count):
-        try:
-            yield await asynchronous_generator.__anext__()
-        except StopAsyncIteration:
-            return
-    raise MaxRetriesExceededError
-
-
 class ArchiveAttempter:
     """Archive attmpter."""
 
-    def __init__(self, ffmpeg_coroutine: FFmpegCoroutine, room_id: int) -> None:
+    def __init__(self, ffmpeg_coroutine: FFmpegCoroutine[FFmpegProcess], room_id: int) -> None:
         self.ffmpeg_coroutine = ffmpeg_coroutine
         self.room_id = room_id
         self.logger = getLogger(__name__)

@@ -1,17 +1,22 @@
 """Main module."""
 
+from __future__ import annotations
+
 import asyncio
 import logging
-from pathlib import Path
-from typing import Optional
+from typing import TYPE_CHECKING
 
 from asynccpu import ProcessTaskPoolExecutor
 
-from showroompodcast.archiving_task_manager import ArchivingTaskManager
 from showroompodcast import CONFIG
-from showroompodcast.showroom_archiver import ShowroomArchiver, TIME_TO_FORCE_TERMINATION
+from showroompodcast.archiving_task_manager import ArchivingTaskManager
+from showroompodcast.showroom_archiver import TIME_TO_FORCE_TERMINATION
+from showroompodcast.showroom_archiver import ShowroomArchiver
 from showroompodcast.showroom_poller import ShowroomPoller
 from showroompodcast.slack.slack_client import SlackNotification
+
+if TYPE_CHECKING:
+    from pathlib import Path
 
 
 class ShowroomPodcast:
@@ -20,7 +25,7 @@ class ShowroomPodcast:
     def __init__(
         self,
         *,
-        path_to_configuration: Optional[Path] = None,
+        path_to_configuration: Path | None = None,
         time_to_force_termination: int = TIME_TO_FORCE_TERMINATION,
     ) -> None:
         logging.basicConfig(level=logging.DEBUG)

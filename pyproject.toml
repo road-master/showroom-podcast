@@ -111,6 +111,8 @@ dependencies = [
     # To request to SHOWROOM API
     "requests",
     "slack-sdk",
+    # To use Path for file path operations
+    "trio",
     # To use YAML config file for list of programs to archive
     "yamldataclassconfig<2.0.0",
 ]
