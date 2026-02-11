@@ -1,12 +1,12 @@
 # SHOWROOM Podcast
 
 [![Test](https://github.com/road-master/showroom-podcast/workflows/Test/badge.svg)](https://github.com/road-master/showroom-podcast/actions?query=workflow%3ATest)
-[![Test Coverage](https://api.codeclimate.com/v1/badges/3aa628f353f2b70a3ff3/test_coverage)](https://codeclimate.com/github/road-master/showroom-podcast/test_coverage)
-[![Maintainability](https://api.codeclimate.com/v1/badges/3aa628f353f2b70a3ff3/maintainability)](https://codeclimate.com/github/road-master/showroom-podcast/maintainability)
-[![Code Climate technical debt](https://img.shields.io/codeclimate/tech-debt/road-master/showroom-podcast)](https://codeclimate.com/github/road-master/showroom-podcast)
-[![Updates](https://pyup.io/repos/github/road-master/showroom-podcast/shield.svg)](https://pyup.io/repos/github/road-master/showroom-podcast/)
+[![CodeQL](https://github.com/road-master/showroom-podcast/workflows/CodeQL/badge.svg)](https://github.com/road-master/showroom-podcast/actions?query=workflow%3ACodeQL)
+[![Code Coverage](https://qlty.sh/gh/road-master/projects/showroom-podcast/coverage.svg)](https://qlty.sh/gh/road-master/projects/showroom-podcast)
+[![Maintainability](https://qlty.sh/gh/road-master/projects/showroom-podcast/maintainability.svg)](https://qlty.sh/gh/road-master/projects/showroom-podcast)
+[![Dependabot](https://flat.badgen.net/github/dependabot/road-master/showroom-podcast?icon=dependabot)](https://github.com/road-master/showroom-podcast/security/dependabot)
 [![Python versions](https://img.shields.io/pypi/pyversions/showroompodcast.svg)](https://pypi.org/project/showroompodcast)
-[![Twitter URL](https://img.shields.io/twitter/url?style=social&url=https%3A%2F%2Fgithub.com%2Froad-master%2Fshowroom-podcast)](http://twitter.com/share?text=SHOWROOM%20Podcast&url=https://pypi.org/project/showroompodcast/&hashtags=python)
+[![X URL](https://img.shields.io/twitter/url?style=social&url=https%3A%2F%2Fgithub.com%2Froad-master%2Fshowroom-podcast)](https://x.com/intent/post?text=SHOWROOM%20Podcast&url=https%3A%2F%2Fpypi.org%2Fproject%2Fshowroompodcast%2F&hashtags=python)
 
 Automatic archiver for SHOWROOM live which is listed by YAML file.
 

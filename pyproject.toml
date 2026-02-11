@@ -37,13 +37,13 @@ dev = [
   "Flake8-pyproject",
   # Latest hacking depends on legacy version of flake8, and legacy hacking doesn't narrow flake8 version.
   # When unpin hacking, it has possibility to install too legacy version of hacking.
-  "hacking >=5.0.0;python_version>='3.8'",
+  "hacking >=5.0.0",
   "invokelint>=0.8.1",
   "mypy",
   "pylint",
   "pytest",
   "pytest-resource-path",
-  "pyvelocity;python_version>='3.9'",
+  "pyvelocity",
   "radon",
   "pytest-asyncio",
   "pytest-mock",
@@ -53,8 +53,8 @@ dev = [
   # To mock requests to prevent slow test
   "requests-mock",
   "ruff>=0.0.17",
-  "semgrep;python_version>='3.9' or platform_system=='Linux'",
-  "types-defusedxml;python_version>='3.8'",
+  "semgrep",
+  "types-defusedxml",
   "types-invoke",
   "types-requests",
   "types-setuptools>=68.2.0.0",
@@ -87,6 +87,10 @@ classifiers = [
     "Programming Language :: Python",
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
     "Topic :: Internet :: WWW/HTTP",
     "Topic :: Internet :: WWW/HTTP :: Dynamic Content",
     "Topic :: Internet :: WWW/HTTP :: Dynamic Content :: Content Management System",
@@ -281,7 +285,7 @@ convention = "google"
 zip-safe = false
 
 [tool.setuptools.package-data]
-showroompodcast = ["py.typed"]
+"*" = ["py.typed"]
 
 [tool.setuptools.packages.find]
 include = ["showroompodcast", "showroompodcast.*"]
