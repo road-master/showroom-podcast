@@ -3,9 +3,9 @@
 import logging
 import traceback
 
+from slack_sdk import WebClient
 from slack_sdk.errors import SlackApiError
 from slack_sdk.web.slack_response import SlackResponse
-from slack_sdk import WebClient
 
 
 class SlackNotification:

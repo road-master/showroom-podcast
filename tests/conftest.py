@@ -1,26 +1,38 @@
 """Configuration of pytest."""
 
-import asyncio
-from collections.abc import Awaitable, Callable, Generator
-from datetime import datetime, timezone
-from io import TextIOWrapper
-import json
-from pathlib import Path
-from typing import Any, Union
-from unittest.mock import MagicMock
+from __future__ import annotations
 
+import asyncio
+import json
+from datetime import datetime
+from datetime import timezone
+from pathlib import Path
+from typing import TYPE_CHECKING
+from typing import Any
+
+import pytest
+import pytest_asyncio
+import requests_mock
 from asynccpu.process_task_pool_executor import ProcessTaskPoolExecutor
 from asyncffmpeg.exceptions import FFmpegProcessError
 from asyncffmpeg.ffmpeg_coroutine_factory import FFmpegCoroutineFactory
-from asyncffmpeg import FFmpegCoroutine, StreamSpec
-import pytest
-from pytest_mock import MockerFixture
-import requests_mock
+from slack_sdk import WebClient
 from slack_sdk.errors import SlackApiError
 from slack_sdk.web.slack_response import SlackResponse
-from slack_sdk import WebClient
 
 import showroompodcast.slack.slack_client
+
+if TYPE_CHECKING:
+    from collections.abc import Awaitable
+    from collections.abc import Callable
+    from collections.abc import Generator
+    from io import TextIOWrapper
+    from unittest.mock import MagicMock
+
+    from asyncffmpeg import FFmpegCoroutine
+    from asyncffmpeg import StreamSpec
+    from asyncffmpeg.ffmpegprocess.interface import FFmpegProcess
+    from pytest_mock import MockerFixture
 
 
 # Reason: Mock pylint: disable-next=too-few-public-methods
@@ -42,7 +54,7 @@ class MockSlackWebClient:
     BOT_TOKEN_FOR_TEST = "slack_bot_token"  # noqa: S105  # nosec: B105
     SLACK_CHANNEL = "slack_channel"
 
-    def __init__(self, mocker: MockerFixture, responses: list[Union[SlackResponse, SlackApiError]]) -> None:
+    def __init__(self, mocker: MockerFixture, responses: list[SlackResponse | SlackApiError]) -> None:
         self.constructor = self.mock_constructor(mocker)
         self.chat_post_message = self.mock_chat_post_message(mocker, responses)
         self.responses = responses
@@ -57,7 +69,7 @@ class MockSlackWebClient:
     @staticmethod
     def mock_chat_post_message(
         mocker: MockerFixture,
-        responses: list[Union[SlackResponse, SlackApiError]],
+        responses: list[SlackResponse | SlackApiError],
     ) -> MagicMock:
         """Mocks chat_postMessage."""
         mock_chat_post_message = mocker.MagicMock(side_effect=responses)
@@ -238,15 +250,15 @@ def mock_now_2021_08_07_21_00_00(mocker: MockerFixture) -> None:
     mocker.patch("showroompodcast.showroom_datetime.datetime", mock_datetime)
 
 
-@pytest.fixture
-def mock_ffmpeg_coroutine_ffmpeg_empty_future(mocker: MockerFixture) -> FFmpegCoroutine:
+@pytest_asyncio.fixture
+async def mock_ffmpeg_coroutine_ffmpeg_empty_future(mocker: MockerFixture) -> FFmpegCoroutine[FFmpegProcess]:
     future: asyncio.Future[None] = asyncio.Future()
     future.set_result(None)
     return create_mock_ffmpeg_coroutine(mocker, [future])
 
 
 @pytest.fixture
-def mock_ffmpeg_coroutine_ffmpeg_process_error(mocker: MockerFixture) -> FFmpegCoroutine:
+def mock_ffmpeg_coroutine_ffmpeg_process_error(mocker: MockerFixture) -> FFmpegCoroutine[FFmpegProcess]:
     ffmpeg_process_error = FFmpegProcessError(
         "File '/tmp/pytest-of-root/pytest-1/test_excecption0/2021_08_07-22_30_00.mp4' already exists. Exiting.",
         1,
@@ -254,7 +266,8 @@ def mock_ffmpeg_coroutine_ffmpeg_process_error(mocker: MockerFixture) -> FFmpegC
     return create_mock_ffmpeg_coroutine(mocker, [ffmpeg_process_error])
 
 
-def create_mock_ffmpeg_coroutine(mocker: MockerFixture, side_effect: Any) -> FFmpegCoroutine:
+# Reason: No type annotation for return value.
+def create_mock_ffmpeg_coroutine(mocker: MockerFixture, side_effect: Any) -> FFmpegCoroutine[FFmpegProcess]:  # noqa: ANN401
     ffmpeg_coroutine = FFmpegCoroutineFactory.create()
     mock_execute = mocker.MagicMock(side_effect=side_effect)
     # Reason: Creating Mock.

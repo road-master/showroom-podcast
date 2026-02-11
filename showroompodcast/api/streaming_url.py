@@ -20,10 +20,13 @@ class StreamingUrl(ShowroomApi):
 
     @classmethod
     def get_url_for_best_quality(cls, room_id: int) -> str:
+        """Gets streaming URL for best quality."""
         response = cls.request({"room_id": room_id})
+        # WebRTC URLs are excluded since FFmpeg does not support the webrtc:// protocol.
+        urls = [u for u in response["streaming_url_list"] if not u["url"].startswith("webrtc://")]
         # The key `quality` sometimes does not exist in latest specification in SHOWROOM.
-        # Reason: Certainly returns str. pylint: disable-next=line-too-long
-        return sorted(response["streaming_url_list"], key=itemgetter("quality"), reverse=True)[0]["url"]  # type: ignore[no-any-return]  # noqa: E501,RUF100
+        # Reason: Certainly returns str.
+        return sorted(urls, key=itemgetter("quality"), reverse=True)[0]["url"]  # type: ignore[no-any-return]
 
     @staticmethod
     def url() -> str:

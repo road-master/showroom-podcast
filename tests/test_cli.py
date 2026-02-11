@@ -3,8 +3,8 @@
 import logging
 from pathlib import Path
 
-from click.testing import CliRunner
 import pytest
+from click.testing import CliRunner
 
 from showroompodcast.cli import showroom_podcast
 

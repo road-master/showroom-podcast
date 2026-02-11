@@ -5,14 +5,19 @@ from collections.abc import AsyncGenerator
 from logging import getLogger
 from threading import Lock
 
+import pytest
+from asyncffmpeg import FFmpegCoroutine
 from asyncffmpeg.exceptions import FFmpegProcessError
 from asyncffmpeg.ffmpeg_coroutine_factory import FFmpegCoroutineFactory
-from asyncffmpeg import FFmpegCoroutine
-from ffmpeg.nodes import InputNode, OutputNode, OutputStream
-import pytest
+from asyncffmpeg.ffmpegprocess.interface import FFmpegProcess
+from ffmpeg.nodes import InputNode
+from ffmpeg.nodes import OutputNode
+from ffmpeg.nodes import OutputStream
 
 from showroompodcast.exceptions import MaxRetriesExceededError
-from showroompodcast.showroom_archiver import ArchiveAttempter, async_retry, ShowroomArchiver
+from showroompodcast.showroom_archiver import ArchiveAttempter
+from showroompodcast.showroom_archiver import AsyncRetry
+from showroompodcast.showroom_archiver import ShowroomArchiver
 from showroompodcast.showroom_datetime import ShowroomDatetime
 from tests.conftest import MockFFmpegCoroutine
 
@@ -24,7 +29,8 @@ class TestShowroomArchiver:
     @pytest.mark.usefixtures("mock_request_room_1_streaming_url")
     # Reason: pytest fixture. pylint: disable=unused-argument
     async def test(self, mock_ffmpeg_coroutine: MockFFmpegCoroutine) -> None:
-        """
+        """Following specifications should be ensured:
+
         - Locked lock should be unlocked.
         - MaxRetriesEceededError should be raised.
         """
@@ -88,6 +94,7 @@ async def test_async_retry() -> None:
     await run_async_retry(shorter_loop_asynchronous_generator())
 
 
+@pytest.mark.asyncio
 async def test_async_retry_max_retry_exceeded() -> None:
     with pytest.raises(MaxRetriesExceededError):
         await run_async_retry(infinity_loop_asynchronous_generator())
@@ -95,7 +102,7 @@ async def test_async_retry_max_retry_exceeded() -> None:
 
 async def run_async_retry(async_generator: AsyncGenerator[None, None]) -> None:
     logger = getLogger()
-    async for _ in async_retry(async_generator, 5):
+    async for _ in AsyncRetry(async_generator, 5):
         logger.debug(_)
 
 
@@ -103,7 +110,7 @@ class TestArchiveAttempter:
     """Test for ArchiveAttempter."""
 
     @pytest.mark.asyncio
-    async def test(self, mock_ffmpeg_coroutine_ffmpeg_empty_future: FFmpegCoroutine) -> None:
+    async def test(self, mock_ffmpeg_coroutine_ffmpeg_empty_future: FFmpegCoroutine[FFmpegProcess]) -> None:
         room_id = 1
         archive_attempter = ArchiveAttempter(mock_ffmpeg_coroutine_ffmpeg_empty_future, room_id)
         assert await self.count_iteration(archive_attempter) == 0
@@ -126,12 +133,17 @@ class TestArchiveAttempter:
     async def test_file_exists_error_not_stop() -> None:
         """File exists error should not stop iteration."""
         archive_attempter = ArchiveAttempter(FFmpegCoroutineFactory.create(), room_id=1)
-        await archive_attempter.__anext__()
+        # Reason: To support Python 3.9
+        await archive_attempter.__anext__()  # pylint: disable=unnecessary-dunder-call
 
     @staticmethod
     @pytest.mark.asyncio
-    async def test_ffmpeg_process_error(mock_ffmpeg_coroutine_ffmpeg_process_error: FFmpegCoroutine) -> None:
+    async def test_ffmpeg_process_error(
+        mock_ffmpeg_coroutine_ffmpeg_process_error: FFmpegCoroutine[FFmpegProcess],
+    ) -> None:
+        """FFmpegProcessError should be raised."""
         room_id = 1
         archive_attempter = ArchiveAttempter(mock_ffmpeg_coroutine_ffmpeg_process_error, room_id)
         with pytest.raises(FFmpegProcessError):
-            await archive_attempter.__anext__()
+            # Reason: To support Python 3.9
+            await archive_attempter.__anext__()  # pylint: disable=unnecessary-dunder-call

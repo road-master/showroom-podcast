@@ -6,7 +6,8 @@ from unittest.mock import ANY
 import pytest
 from slack_sdk.errors import SlackApiError
 
-from showroompodcast.slack.slack_client import SlackClient, SlackNotification
+from showroompodcast.slack.slack_client import SlackClient
+from showroompodcast.slack.slack_client import SlackNotification
 from tests.conftest import MockSlackWebClient
 
 
