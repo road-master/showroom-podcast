@@ -49,7 +49,7 @@ dev = [
   "pytest-mock",
   # - Radon can't run when use pytest log fornat: `$()d` · Issue #251 · rubik/radon
   #   https://github.com/rubik/radon/issues/251
-  "radon<6.0.0",
+  "radon<7.0.0",
   # To mock requests to prevent slow test
   "requests-mock",
   "ruff>=0.0.17",
