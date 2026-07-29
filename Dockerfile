@@ -1,4 +1,4 @@
-FROM futureys/claude-code-python-development:20260407212500
+FROM futureys/claude-code-python-development:20260726122500
 RUN apt-get update && apt-get install -y ffmpeg
 COPY pyproject.toml /workspace/
 # - Installation fails on Python 3.14 · Issue #327 · PyCQA/docformatter
