@@ -1,3 +1,4 @@
+# Copyright (C) 2021 Master
 """Test for streaming_url.py."""
 
 import pytest

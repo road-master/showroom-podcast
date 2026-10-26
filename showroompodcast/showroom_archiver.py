@@ -1,3 +1,4 @@
+# Copyright (C) 2021 Master
 """SHOWROOM archiver."""
 
 import asyncio

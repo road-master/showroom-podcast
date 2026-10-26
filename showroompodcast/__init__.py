@@ -1,3 +1,4 @@
+# Copyright (C) 2021 Master
 """Top-level package for SHOWROOM Podcast."""
 
 from showroompodcast.config import Config

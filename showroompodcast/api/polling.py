@@ -1,3 +1,4 @@
+# Copyright (C) 2021 Master
 """API of polling."""
 
 from requests import HTTPError

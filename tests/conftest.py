@@ -1,3 +1,4 @@
+# Copyright (C) 2021 Master
 """Configuration of pytest."""
 
 from __future__ import annotations

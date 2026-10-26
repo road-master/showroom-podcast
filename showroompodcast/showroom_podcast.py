@@ -1,3 +1,4 @@
+# Copyright (C) 2021 Master
 """Main module."""
 
 from __future__ import annotations
