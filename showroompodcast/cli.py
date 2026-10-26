@@ -1,3 +1,4 @@
+# Copyright (C) 2021 Master
 """Console script for SHOWROOM Podcast."""
 
 from __future__ import annotations

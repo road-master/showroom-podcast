@@ -18,7 +18,11 @@ on:
     branches: [ "main" ]
   schedule:
     - cron: '27 14 * * 2'
-
+permissions:
+  security-events: write
+  packages: read
+  actions: read
+  contents: read
 jobs:
   call-workflow:
     permissions:
@@ -29,4 +33,4 @@ jobs:
       # only required for workflows in private repositories
       actions: read
       contents: read
-    uses: yukihiko-shinoda/invoke-lint/.github/workflows/reusable-codeql-analysis.yml
+    uses: yukihiko-shinoda/reusable-workflow-codeql-python/.github/workflows/workflow.yml@ca5a2fbce666756cb15aca6e3a33852588728909  # v1.0.0

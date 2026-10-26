@@ -1,3 +1,4 @@
+# Copyright (C) 2021 Master
 """Slack client."""
 
 import logging
@@ -45,11 +46,11 @@ class SlackClient:
             raise
 
     def log_slack_api_error(self, error: SlackApiError) -> None:
-        """Logs Slack API error."""
+        """Log Slack API error."""
         # You will get a SlackApiError if "ok" is False
         if error.response["ok"] is not False:
             self.logger.error('Ok is not False. error.response["ok"] = %s', error.response["ok"])
         if not error.response["error"]:  # str like 'invalid_auth', 'channel_not_found'
             self.logger.error('Error is empty. error.response["error"] = %s', error.response["error"])
         self.logger.error(error.response["error"])
-        self.logger.exception(error)
+        self.logger.error(error, exc_info=error)

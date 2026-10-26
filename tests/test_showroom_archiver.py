@@ -1,3 +1,4 @@
+# Copyright (C) 2021 Master
 """Tests for showroom_archiver.py."""
 
 import asyncio
@@ -57,7 +58,7 @@ class TestShowroomArchiver:
         self.assert_incoming_edge(output_node.incoming_edge_map[0])
 
     def assert_incoming_edge(self, incoming_edge: tuple[InputNode, None, None]) -> None:
-        """Asserts incoming edge."""
+        """Assert incoming edge."""
         expected_length_incoming_edge = 3
         assert len(incoming_edge) == expected_length_incoming_edge
         assert incoming_edge[1] is None
@@ -67,7 +68,7 @@ class TestShowroomArchiver:
         self.assert_input_node(input_node)
 
     def assert_input_node(self, input_node: InputNode) -> None:
-        """Asserts input node."""
+        """Assert input node."""
         assert input_node.args == []
         assert input_node.kwargs == {
             "copytb": "1",
