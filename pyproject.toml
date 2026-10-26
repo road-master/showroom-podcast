@@ -49,6 +49,7 @@ classifiers = [
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
     "Topic :: Internet :: WWW/HTTP",
     "Topic :: Internet :: WWW/HTTP :: Dynamic Content",
     "Topic :: Internet :: WWW/HTTP :: Dynamic Content :: Content Management System",
@@ -110,8 +111,7 @@ search = '__version__ = "{current_version}"'
 replace = '__version__ = "{new_version}"'
 
 [tool.coverage.report]
-exclude_lines = [
-    "pragma: no cover",
+exclude_also = [
     # Assume `if TYPE_CHECKING: ... else: ...` block is covered · Issue #831 · nedbat/coveragepy
     #   https://github.com/nedbat/coveragepy/issues/831#issuecomment-517778185
     "if TYPE_CHECKING:",
@@ -201,7 +201,17 @@ markers = [
 line-length = 119
 
 [tool.ruff.lint]
-select = ["ALL"]
+external = [
+    "DUO",  # dlint
+    "H",    # Openstack/hacking
+]
+select = [
+    "ALL",
+    # Since compatible with PEP257, we can check docstring style by Ruff and don't need to consider about docstring style separately:
+    # - Should the first line of a Python function docstring be in imperative mood? (ruff / pydocstyle D401)
+    #   https://zenn.dev/y_shinoda/articles/pydocstyle-d401
+    "D401",    # First line should be in imperative mood
+]
 ignore = [
     # lint.pydocstyle
     # Reason: Docstring may be missed since docstring-min-length is set.
