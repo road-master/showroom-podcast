@@ -46,7 +46,7 @@ class SlackClient:
             raise
 
     def log_slack_api_error(self, error: SlackApiError) -> None:
-        """Logs Slack API error."""
+        """Log Slack API error."""
         # You will get a SlackApiError if "ok" is False
         if error.response["ok"] is not False:
             self.logger.error('Ok is not False. error.response["ok"] = %s', error.response["ok"])

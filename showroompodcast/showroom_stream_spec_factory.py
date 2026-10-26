@@ -23,7 +23,7 @@ class ShowroomStreamSpecFactory:
         self.logger = getLogger(__name__)
 
     async def create(self) -> StreamSpec:
-        """Creates."""
+        """Create."""
         now = ShowroomDatetime.now_jst()
         now_string = ShowroomDatetime.encode(now)
         out_file_name = f"./output/{self.room_id}-{now_string}.mp4"

@@ -53,7 +53,7 @@ class ShowroomArchiver:
         self.logger = getLogger(__name__)
 
     async def archive(self, room_id: int, lock: Lock) -> None:
-        """Archives SHOWROOM program."""
+        """Archive SHOWROOM program."""
         self.logger.debug("Start archive")
         self.logger.debug("room_id: %d", room_id)
         archive_attempter = ArchiveAttempter(self.ffmpeg_coroutine, room_id)

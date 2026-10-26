@@ -37,7 +37,7 @@ class ShowroomPodcast:
         self.logger = logging.getLogger(__name__)
 
     def run(self) -> None:
-        """Runs."""
+        """Run."""
         try:
             asyncio.run(self.archive_repeatedly())
         except Exception as error:
