@@ -30,8 +30,7 @@ class ShowroomPodcast:
         time_to_force_termination: int = TIME_TO_FORCE_TERMINATION,
     ) -> None:
         logging.basicConfig(level=logging.DEBUG)
-        # Reason: YAML Dataclass Config's issue.
-        CONFIG.load(path_to_configuration)  # type: ignore[arg-type]
+        CONFIG.load(path_to_configuration)
         self.showroom_archiver = ShowroomArchiver(time_to_force_termination=time_to_force_termination)
         self.archiving_task_manager = ArchivingTaskManager(CONFIG.list_room_id)
         self.logger = logging.getLogger(__name__)
