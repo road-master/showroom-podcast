@@ -21,7 +21,7 @@ dev = [
 
 [project]
 name = "showroompodcast"
-version = "20260212035500"
+version = "20261026235500"
 description = "Automatic archiver for SHOWROOM live which is listed by YAML file."
 readme = "README.md"
 requires-python = ">=3.9"
@@ -96,7 +96,7 @@ repository = "https://github.com/road-master/showroom-podcast"
 skips = ["tests/*"]
 
 [tool.bumpversion]
-current_version = "20260212035500"
+current_version = "20261026235500"
 commit = true
 tag = true
 
