@@ -72,7 +72,7 @@ class MockSlackWebClient:
         mocker: MockerFixture,
         responses: list[SlackResponse | SlackApiError],
     ) -> MagicMock:
-        """Mocks chat_postMessage."""
+        """Mock chat_postMessage."""
         mock_chat_post_message = mocker.MagicMock(side_effect=responses)
         mocker.patch.object(WebClient, "chat_postMessage", mock_chat_post_message)
         # Reason: Certainly returns MagicMock.
@@ -108,7 +108,7 @@ def mock_slack_web_client_type_error(resource_path_root: Path, mocker: MockerFix
 
 @pytest.fixture
 def mock_slack_web_client_raise_slack_api_error(mocker: MockerFixture) -> MockSlackWebClient:
-    """Mocks Slack web client to raise SlackApiError."""
+    """Mock Slack web client to raise SlackApiError."""
     slack_response = SlackResponse(
         client=None,
         http_verb="POST",
@@ -278,7 +278,7 @@ def create_mock_ffmpeg_coroutine(mocker: MockerFixture, side_effect: Any) -> FFm
 
 @pytest.fixture
 def mock_process_task_pool_executor(mocker: MockerFixture) -> None:
-    """Mocks ProcessTaskPoolExecutor."""
+    """Mock ProcessTaskPoolExecutor."""
     process_task_executor = ProcessTaskPoolExecutor()
     mock_method = mocker.MagicMock(side_effect=[None, None, None, None, FFmpegProcessError("", 127)])
     # Reason: Creating Mock.
