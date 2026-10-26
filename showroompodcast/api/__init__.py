@@ -1,3 +1,4 @@
+# Copyright (C) 2021 Master
 """SHOWROOM API."""
 
 from abc import abstractmethod
@@ -18,7 +19,7 @@ class ShowroomApi:
 
     @classmethod
     def request(cls, params: dict[str, Any]) -> dict[str, Any]:
-        """Requests.
+        """Request.
 
         To use connection pooling via session object
         to prevent NewConnectionError

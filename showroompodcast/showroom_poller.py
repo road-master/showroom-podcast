@@ -1,3 +1,4 @@
+# Copyright (C) 2021 Master
 """SHOWROOM poller."""
 
 from logging import getLogger
@@ -19,7 +20,7 @@ class ShowroomPoller:
         self.logger = getLogger(__name__)
 
     def poll(self, room_id: int, lock_archive_task: Lock) -> None:
-        """Polls."""
+        """Poll."""
         try:
             is_on_live = Polling.poll(room_id)
         except TemporaryNetworkIssuesError as error:

@@ -1,3 +1,4 @@
+# Copyright (C) 2021 Master
 """API of polling."""
 
 from requests import HTTPError
@@ -12,13 +13,13 @@ class Polling(ShowroomApi):
 
     @classmethod
     def poll(cls, room_id: int) -> bool:
-        """Returns True when on live, otherwise returns False."""
+        """Return True when on live, otherwise return False."""
         response = cls._poll(room_id)
         return "live_end" not in response or response["live_end"] != 1
 
     @classmethod
     def _poll(cls, room_id: int) -> dict[str, int]:
-        """Returns True when on live, otherwise returns False."""
+        """Request the live status of the room."""
         try:
             return cls.request({"room_id": room_id})
         except HTTPError as error:

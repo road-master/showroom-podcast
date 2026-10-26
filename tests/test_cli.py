@@ -1,3 +1,4 @@
+# Copyright (C) 2021 Master
 """Test for showroom_podcast.py."""
 
 import logging

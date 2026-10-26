@@ -1,3 +1,4 @@
+# Copyright (C) 2021 Master
 """Tests for polling.py."""
 
 import pytest
