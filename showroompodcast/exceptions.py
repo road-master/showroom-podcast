@@ -1,3 +1,4 @@
+# Copyright (C) 2021 Master
 """This module implements exceptions for this package."""
 
 

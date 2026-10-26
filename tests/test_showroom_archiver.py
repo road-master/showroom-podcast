@@ -1,3 +1,4 @@
+# Copyright (C) 2021 Master
 """Tests for showroom_archiver.py."""
 
 import asyncio

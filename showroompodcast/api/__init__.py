@@ -1,3 +1,4 @@
+# Copyright (C) 2021 Master
 """SHOWROOM API."""
 
 from abc import abstractmethod

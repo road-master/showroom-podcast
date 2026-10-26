@@ -2,9 +2,12 @@ on:
   push:
     branches:
       - main
+permissions:
+  contents: read
+  id-token: write
 jobs:
   call-workflow:
     permissions:
       contents: read
       id-token: write
-    uses: yukihiko-shinoda/invoke-lint/.github/workflows/reusable-qlty.yml@main
+    uses: yukihiko-shinoda/reusable-workflow-invoke-lint-qlty/.github/workflows/workflow.yml@d559042ef2b0dc7bb96be1e03a1c4abd1d100a69  # v1.1.0

@@ -1,3 +1,4 @@
+# Copyright (C) 2021 Master
 """API of Streaming URL."""
 
 from collections.abc import Callable
@@ -26,7 +27,7 @@ class StreamingUrl(ShowroomApi):
         urls = [u for u in response["streaming_url_list"] if not u["url"].startswith("webrtc://")]
         # The key `quality` sometimes does not exist in latest specification in SHOWROOM.
         # Reason: Certainly returns str.
-        return sorted(urls, key=itemgetter("quality"), reverse=True)[0]["url"]  # type: ignore[no-any-return]
+        return max(urls, key=itemgetter("quality"))["url"]  # type: ignore[no-any-return]
 
     @staticmethod
     def url() -> str:

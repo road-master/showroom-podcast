@@ -1,3 +1,4 @@
+# Copyright (C) 2021 Master
 """Slack client."""
 
 import logging
@@ -52,4 +53,4 @@ class SlackClient:
         if not error.response["error"]:  # str like 'invalid_auth', 'channel_not_found'
             self.logger.error('Error is empty. error.response["error"] = %s', error.response["error"])
         self.logger.error(error.response["error"])
-        self.logger.exception(error)
+        self.logger.error(error, exc_info=error)
